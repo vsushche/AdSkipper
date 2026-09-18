@@ -73,7 +73,6 @@ dependencies {
     implementation("androidx.fragment:fragment:1.8.9")
     implementation("androidx.core:core-ktx:1.18.0")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.json:json:20251224")
     // Core library
     androidTestImplementation("androidx.test:core:1.7.0")
 
