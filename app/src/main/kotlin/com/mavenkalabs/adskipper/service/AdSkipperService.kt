@@ -21,7 +21,6 @@ import com.mavenkalabs.adskipper.util.AppLog.Companion.disable
 import com.mavenkalabs.adskipper.util.AppLog.Companion.e
 import com.mavenkalabs.adskipper.util.AppLog.Companion.enable
 import com.mavenkalabs.adskipper.util.AppLog.Companion.logAccessibilityEvent
-import com.mavenkalabs.adskipper.util.ConfigReader
 import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Consumer
 
@@ -31,8 +30,6 @@ class AdSkipperService : AccessibilityService() {
     private var captureLogs = false
 
     private var adInProgress = false
-
-    private val configReader: ConfigReader? = null
 
     /**
      * Last time a click happened
@@ -167,18 +164,6 @@ class AdSkipperService : AccessibilityService() {
         toggleMute(false)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        if (configReader != null) {
-            try {
-                configReader.close()
-            } catch (e: Exception) {
-                e(TAG, e.message!!, e)
-            }
-        }
-    }
-
     public override fun onServiceConnected() {
         enable(null) // enable ordinary logging
 
@@ -255,30 +240,6 @@ class AdSkipperService : AccessibilityService() {
                         }.toTypedArray())
             )
         )
-
-        /*
-        configReader = new ConfigReader(config -> {
-            packageClickRules.set(config.getClickRules().entrySet().stream().collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    entry -> rulesParser.orRules(
-                            entry.getValue().stream().map(s -> rulesParser.parse(s, entry.getKey())).toArray(BaseRule[]::new))
-            )));
-            packageMuteRules.set(config.getMuteRules().entrySet().stream().collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    entry -> rulesParser.orRules(
-                            entry.getValue().stream().map(s -> rulesParser.parse(s, entry.getKey())).toArray(BaseRule[]::new))
-            )));
-
-            AccessibilityServiceInfo serviceInfo = getServiceInfo();
-            Set<String> packages = new HashSet<>(config.getClickRules().keySet());
-            packages.addAll(config.getMuteRules().keySet());
-            serviceInfo.packageNames = packages.toArray(new String[0]);
-            setServiceInfo(serviceInfo);
-
-            AppLog.d(TAG, "Click rules are: {0}", packageClickRules.get());
-            AppLog.d(TAG, "Mute rules are: {0}", packageMuteRules.get());
-            AppLog.d(TAG, "Packages are: {0}", Arrays.asList(serviceInfo.packageNames));
-        });*/
     }
 
     companion object {
